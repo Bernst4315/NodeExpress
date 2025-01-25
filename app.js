@@ -1,14 +1,25 @@
 const express = require("express");
 const morgan = require("morgan")
-const app = express(); 
+const mongoose = require("mongoose");
+const Blog = require("./models/blog")
 
+const app = express(); 
+const port = 3000;
+
+const dbURI = "mongodb+srv://bernst4315:BlkAngelfish25@cluster0.6rl8i.mongodb.net/Node-Tutorial?retryWrites=true&w=majority&appName=Cluster0"
+mongoose.connect(dbURI, {useNewUrlParser:true, useUnifiedTopology:true})
+    .then((results) => {
+        console.log("connected to database")
+        app.listen(port);
+    })
+    .catch((err) => console.log(err));
 //registar view engine
 app.set("view engine", "ejs");
 
-const port = 3000; 
+ 
 
-//listen for request
-app.listen(port);
+//add middleware
+
 
 app.use(express.static("public")) //links static files such as css
 app.use(morgan("dev"));
@@ -25,6 +36,43 @@ app.use(morgan("dev"));
 //     console.log("In the next middleware")
 
 //     next();
+// })
+
+//mongoose and mongo routes and how to interact with db
+// app.get("/add-blog", (req,res) => {
+//     const blog = new Blog({
+//         title: "new blog",
+//         snippet: "about new blog",
+//         body: "ajdlkfjalkdfjalksdj"
+//     }); 
+
+//     blog.save()
+//         .then((results) => {
+//             res.send(results)
+//         })
+//         .catch((err) => {
+//             console.log(err)
+//         });
+// })
+
+// app.get("/all-blogs", (req,res) => {
+//     Blog.find()
+//         .then((results) => {
+//             res.send(results)
+//         })
+//         .catch((err) => {
+//             console.log(err)
+//         });
+// })
+
+// app.get("/single-blog", (req,res) => {
+//     Blog.findById("679563ae569808dd22061efa")
+//         .then((results) => {
+//             res.send(results)
+//         })
+//         .catch((err) => {
+//             console.log(err)
+//         });
 // })
 
 app.get("/", (req,res) => {
