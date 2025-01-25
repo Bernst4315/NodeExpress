@@ -76,14 +76,15 @@ app.use(morgan("dev"));
 // })
 
 app.get("/", (req,res) => {
-    const blogs =[
-        {title: "blog 1", snippet: "jakdjfakdjfajjfdlaajfldska"},
-        {title: "blog 2", snippet: "jakdjfakdjfajjfdlaajfldska"},
-        {title: "blog 3", snippet: "jakdjfakdjfajjfdlaajfldska"}
-    ]
+    res.redirect("/blogs")
+    // const blogs =[
+    //     {title: "blog 1", snippet: "jakdjfakdjfajjfdlaajfldska"},
+    //     {title: "blog 2", snippet: "jakdjfakdjfajjfdlaajfldska"},
+    //     {title: "blog 3", snippet: "jakdjfakdjfajjfdlaajfldska"}
+    // ]
     //res.send("<p>Home Page</p>")
     //res.sendFile("./views/index.html", {root: __dirname});
-    res.render("index", {title: "home", blogs}); //in ejs this obj is being passed into the index.ejs file
+    // res.render("index", {title: "home", blogs}); //in ejs this obj is being passed into the index.ejs file
 })
 
 app.get("/about", (req,res) => {
@@ -98,6 +99,26 @@ app.get("/about", (req,res) => {
 // app.get("/about-us", (req,res) => {
 //     res.redirect("/about");
 // })
+
+//blog routes
+app.get("/blogs", (req,res) => {
+       Blog.find().sort({ createdAt: -1})
+        .then((results) => {
+            res.render("index", {title: "All Blogs", blogs: results})
+            //res.send(results)
+        })
+        .catch((err) => {
+            console.log(err)
+        });
+   
+    // const blogs =[
+    //     {title: "blog 1", snippet: "jakdjfakdjfajjfdlaajfldska"},
+    //     {title: "blog 2", snippet: "jakdjfakdjfajjfdlaajfldska"},
+    //     {title: "blog 3", snippet: "jakdjfakdjfajjfdlaajfldska"}
+    // ];
+    // res.render("index", {title: "home", blogs});
+
+})
 
 //creat blogs page
 
