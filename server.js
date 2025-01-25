@@ -1,9 +1,19 @@
 const http = require("http");
 const fs = require("fs"); //gets file syst
+const _ = require("lodash");
 const port = 3000; 
 
 const server = http.createServer((req, res) => {
-    console.log("request made");
+    //lodash
+    const num = _.random(0, 20);
+    console.log(num);
+    const greet = _.once(() => {
+        console.log("hello");
+    })
+
+    greet();
+    greet(); 
+    //set header
     res.setHeader("Content-Type", "text/html");
     
     let path = "./views/";
