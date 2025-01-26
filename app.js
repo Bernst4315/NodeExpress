@@ -21,7 +21,8 @@ app.set("view engine", "ejs");
 //add middleware
 
 
-app.use(express.static("public")) //links static files such as css
+app.use(express.static("public")); //links static files such as css
+app.use(express.urlencoded({extended: true}));
 app.use(morgan("dev"));
 
 // app.use((req, res, next) => {
@@ -67,12 +68,12 @@ app.use(morgan("dev"));
 
 // app.get("/single-blog", (req,res) => {
 //     Blog.findById("679563ae569808dd22061efa")
-//         .then((results) => {
-//             res.send(results)
-//         })
-//         .catch((err) => {
-//             console.log(err)
-//         });
+        // .then((results) => {
+        //     res.send(results)
+        // })
+        // .catch((err) => {
+        //     console.log(err)
+        // });
 // })
 
 app.get("/", (req,res) => {
@@ -101,6 +102,13 @@ app.get("/about", (req,res) => {
 // })
 
 //blog routes
+
+//creat blogs page
+app.get("/blogs/create", (req,res) => {
+
+    res.render("create", {title: "create blog"});
+ })
+
 app.get("/blogs", (req,res) => {
        Blog.find().sort({ createdAt: -1})
         .then((results) => {
@@ -120,12 +128,30 @@ app.get("/blogs", (req,res) => {
 
 })
 
-//creat blogs page
-
-app.get("/blogs/create", (req,res) => {
-
-   res.render("create", {title: "create blog"});
+app.post("/blogs", (req,res) => {
+    const blog = new Blog(req.body);
+    blog.save()
+    .then((results) => {
+        res.redirect("/blogs")
+    })
+    .catch((err) => {
+        console.log(err)
+    });
 })
+
+app.get("/blogs/:id", (req,res) => {
+    const id = req.params.id;
+    Blog.findById(id)
+    .then((results) => {
+        res.render("details", {blog: results, title: "Blog Details"});
+    })
+    .catch((err) => {
+        console.log(err)
+    });
+});
+
+
+
 
 //404 page
 
