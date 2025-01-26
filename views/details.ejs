@@ -9,9 +9,30 @@
         <div class="content">
             <p><%= blog.body%></p>
         </div>
-        <!-- <a class="delete" data.doc="<%= blog._id%>">Delete</a> -->
+        <a class="delete" data-doc="<%= blog._id%>">Delete</a>
     </div>
 
     <%- include("./partials/foot.ejs") %>
+<script>
+    const trashcan = document.querySelector("a.delete");
+    trashcan.addEventListener("click", (e) => {
+        const endpoint = `/blogs/${trashcan.dataset.doc}`;
+        console.log(endpoint);
+        fetch(endpoint, {
+            method: "DELETE",
+        })
+        .then((response) => {
+          return response.json() //this didn't work, might be becaus eit was an obj inside of an obj
+    })//if curly brackets in place, needed to return. w/out {} is wasn't trapped within a scope?
+        .then((data) => {
+            //console.log(data);
+            window.location.href = data.redirect;
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+    })
+</script>
+
 </body>
 </html>
