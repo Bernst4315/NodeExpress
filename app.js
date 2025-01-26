@@ -1,7 +1,8 @@
 const express = require("express");
 const morgan = require("morgan")
 const mongoose = require("mongoose");
-const Blog = require("./models/blog")
+
+const blogRoutes = require("./routes/blogRoutes");
 
 const app = express(); 
 const port = 3000;
@@ -101,68 +102,8 @@ app.get("/about", (req,res) => {
 //     res.redirect("/about");
 // })
 
-//blog routes
-
-//creat blogs page
-app.get("/blogs/create", (req,res) => {
-
-    res.render("create", {title: "create blog"});
- })
-
-app.get("/blogs", (req,res) => {
-       Blog.find().sort({ createdAt: -1})
-        .then((results) => {
-            res.render("index", {title: "All Blogs", blogs: results})
-            //res.send(results)
-        })
-        .catch((err) => {
-            console.log(err)
-        });
-   
-    // const blogs =[
-    //     {title: "blog 1", snippet: "jakdjfakdjfajjfdlaajfldska"},
-    //     {title: "blog 2", snippet: "jakdjfakdjfajjfdlaajfldska"},
-    //     {title: "blog 3", snippet: "jakdjfakdjfajjfdlaajfldska"}
-    // ];
-    // res.render("index", {title: "home", blogs});
-
-})
-
-app.post("/blogs", (req,res) => {
-    const blog = new Blog(req.body);
-    blog.save()
-    .then((results) => {
-        res.redirect("/blogs")
-    })
-    .catch((err) => {
-        console.log(err)
-    });
-})
-
-app.get("/blogs/:id", (req,res) => {
-    const id = req.params.id;
-    Blog.findById(id)
-    .then((results) => {
-        res.render("details", {blog: results, title: "Blog Details"});
-    })
-    .catch((err) => {
-        console.log(err)
-    });
-});
-
-app.delete("/blogs/:id", (req, res) => {
-    const id = req.params.id;
-
-    Blog.findByIdAndDelete(id)
-    .then((result) => {
-      res.json({ redirect: '/blogs', });
-    })
-    .catch(err => {
-      console.log(err);
-    });
-})
-
-
+//blogs
+app.use("/blogs", blogRoutes); //scopes out blog, sine this is middleware it does it inbetween requests, no longer need /blog in blogRoutes
 //404 page
 
 app.use((req,res) => {
